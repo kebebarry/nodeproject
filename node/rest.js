@@ -206,8 +206,7 @@ app.all('/getlist', function(req, res) {
 			return;
 		}
 		var fresult = results;
-		
-		
+
 		connection.query(searchchildren, function(error, sqlres) {
 			if(error) {
 				console.log('[INSERT ERROR] - ', error.message);
@@ -219,17 +218,17 @@ app.all('/getlist', function(req, res) {
 			}
 			var children = sqlres;
 			console.log('The solution is: ', JSON.stringify(sqlres));
-			
+
 			for(var i = 0; i < fresult.length; i++) {
 				if(fresult[i].ishaschildren == '1') {
-					var childrenlist=[];
-					for(var n = 0; n < children.length; n++){
-						if(fresult[i].uuid==children[n].uuid){
+					var childrenlist = [];
+					for(var n = 0; n < children.length; n++) {
+						if(fresult[i].uuid == children[n].uuid) {
 							childrenlist.push(children[n]);
 						}
-						
+
 					}
-					
+
 					fresult[i].children = childrenlist;
 				}
 			}
@@ -242,14 +241,141 @@ app.all('/getlist', function(req, res) {
 			res.end();
 		})
 
-	}); 
+	});
+
+});
+
+//添加积分消费
+app.all('/addinit', function(req, res) {
+	// 通过request的data事件监听函数，每当接受到请求体的数据，就累加到post变量中
+	res.set({
+		'Access-Control-Allow-Origin': '*',
+		'Content-Type': 'application/json;charset=utf-8',
+		'Access-Control-Allow-Headers': 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With',
+		'Access-Control-Allow-Method': 'PUT,POST,GET,DELETE,OPTIONS'
+	});
+	var getdata = req.body;
+	console.log(JSON.stringify(getdata));
+	res.status(200);
+	if(getdata.userguid == '') {
+		res.json({
+			resoponse: '缺少用户唯一标识',
+			satus: '0'
+		});
+		res.end();
+		return;
+	}
+	if(getdata.jifen == '') {
+		res.json({
+			resoponse: '缺少积分',
+			satus: '0'
+		});
+		res.end();
+		return;
+	}
+	if(getdata.isadd == '') {
+		res.json({
+			resoponse: '缺少状态',
+			satus: '0'
+		});
+		res.end();
+		return;
+	}
+	var nowdate = new Date();
+	var nowtime = nowdate.getFullYear().toString() + '年' + (nowdate.getMonth() + 1).toString() + '月' + nowdate.getDate().toString() + '日' + ' ' + nowdate.getHours() + ':' + nowdate.getMinutes();
+	console.log(nowtime);
+	var addSql = 'INSERT INTO integration(num,userguid,jifen,isadd,date) VALUES(0,?,?,?,?)'; //新增等方法
+	var addSqlParams = [getdata.userguid, getdata.jifen, getdata.isadd, nowtime]; //新增的方法
+	console.log(addSql);
+	//从数据库写入数据
+	connection.query(addSql, addSqlParams, function(error, results) {
+		if(error) {
+			console.log('[INSERT ERROR] - ', error.message);
+
+			res.json({
+				resoponse: error.message
+			});
+			res.end();
+			return;
+		}
+
+		console.log(typeof(JSON.stringify(results)))
+		console.log('The solution is: ', JSON.stringify(results));
+
+		res.json({
+			resoponse: '积分处理成功',
+			satus: '1'
+		});
+		res.end();
+	});
+
+});
+//获取列表数据
+app.all('/getjifenlist', function(req, res) {
+	// 通过request的data事件监听函数，每当接受到请求体的数据，就累加到post变量中
+	res.set({
+		'Access-Control-Allow-Origin': '*',
+		'Content-Type': 'application/json;charset=utf-8',
+		'Access-Control-Allow-Headers': 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With',
+		'Access-Control-Allow-Method': 'PUT,POST,GET,DELETE,OPTIONS'
+	});
+	var getdata = req.body;
+	console.log(JSON.stringify(getdata));
+	res.status(200);
+	if(getdata.userguid == '') {
+		res.json({
+			resoponse: '缺少用户唯一标识',
+			satus: '0'
+		});
+		res.end();
+		return;
+	}
+	if(getdata.pagesize == '') {
+		res.json({
+			resoponse: '缺少分页参数',
+			satus: '0'
+		});
+		res.end();
+		return;
+	}
+	if(getdata.pageindex == '') {
+		res.json({
+			resoponse: '缺少分页参数',
+			satus: '0'
+		});
+		res.end();
+		return;
+	}
+	var searchSql = 'SELECT * from integration where userguid='+getdata.userguid+' limit '+getdata.pageindex+','+getdata.pagesize;
+	console.log(searchSql);
+	//从数据库读数据
+	connection.query(searchSql, function(error, results) {
+		if(error) {
+			console.log('[INSERT ERROR] - ', error.message);
+			res.json({
+				resoponse: error.message
+			});
+			res.end();
+			return;
+		}
+		var fresult = results;
+			console.log('The solution is: ', JSON.stringify(fresult));
+			res.json({
+				resoponse: '请求成功',
+				userarea: fresult,
+				status:'1'
+			});
+			res.end();
+		
+
+	});
 
 });
 //服务监听3000端口，可修改
 var server = app.listen(3000, function() {
-
+	console.log(JSON.stringify(server.address()))
 	var host = server.address().address
 	var port = server.address().port
-	console.log("应用实例，访问地址为 http://%s:%s", host, port)
+	console.log("应用实例，访问地址为 http://127.0.0.1", host, port)
 
 });
