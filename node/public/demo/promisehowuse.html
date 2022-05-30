@@ -1,0 +1,201 @@
+<!-- /**
+ * promise用法
+ */ -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title></title>
+		<style type="text/css">
+			.imgbox {
+				width: 100%;
+				height: 200px;
+				margin-top: 10px;
+				border: 1px solid #999999;
+			}
+
+			img {
+				width: 100%;
+			}
+			.send{
+				width: 100%;
+				height: 44px;
+				text-align: center;
+				line-height: 44px;
+				margin-top: 10px;
+				background-color: blue;
+				color: #fff;
+			}
+			.send:active{
+				background-color: #999999;
+			}
+			.appendbox{
+				width: 100%;
+				height: 100px;
+				margin-top: 10px;
+				border: 1px solid #999999;
+			}
+			.textarea{
+				width: 100%;
+				height: 200px;
+			}
+			.textarea textarea{
+				width: 100%;
+				height: 200px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- <div class="textarea">
+			<textarea rows="" cols="" id="textbox"></textarea>
+		</div> -->
+		<div class="imgbox" contenteditable="true" id="editbox">
+		
+		</div>
+		<div class="send" id="send">
+			获取并填写到下方
+		</div>
+		<!-- <div class="appendbox" id="tappendbox">
+			
+		</div> -->
+		<div class="appendbox" id="appendbox">
+			
+		</div>
+		<script>
+			
+		(function(){
+			/**
+			 * 介绍promise的基本说明
+			 */
+			function runAsync1(){
+			    var p = new Promise(function(resolve, reject){
+			        //做一些异步操作
+			        setTimeout(function(){
+			            console.log('异步任务1执行完成');
+			            resolve('随便什么数据1');
+			        }, 1000);
+			    });
+			    return p;            
+			}
+			function runAsync2(){
+			    var p = new Promise(function(resolve, reject){
+			        //做一些异步操作
+			        setTimeout(function(){
+			            console.log('异步任务2执行完成');
+			            resolve('随便什么数据2');
+			        }, 2000);
+			    });
+			    return p;            
+			}
+			function runAsync3(){
+			    var p = new Promise(function(resolve, reject){
+			        //做一些异步操作
+			        setTimeout(function(){
+			            console.log('异步任务3执行完成');
+			            resolve('随便什么数据3');
+			        }, 2000);
+			    });
+			    return p;            
+			}
+			
+			runAsync1()
+			.then(function(data){
+			    // console.log(data);
+			    // return runAsync2();
+			})
+			.then(function(data){
+			    // console.log(data);
+			    // return '直接返回数据';  //这里直接返回数据
+			})
+			.then(function(data){
+			    // console.log(data);
+				// return '继续下一步';//只要return then就能继续执行下去，如果return的是promise对象，则后面的then执行promise；
+									// 如果return 字符串，则下一步获取字符串
+			})
+			.then(function(data){
+			    // console.log(data);
+			});
+			
+			/**
+			 * 介绍resolve和reject
+			 * resolve是成功处理
+			 * reject是promise走了rejected的状态
+			 */
+			function getNumber(){
+			    var p = new Promise(function(resolve, reject){
+			        //做一些异步操作
+			        setTimeout(function(){
+			            var num = Math.ceil(Math.random()*10); //生成1-10的随机数
+			            if(num<=5){
+			                resolve(num);
+			            }
+			            else{
+			                reject('数字太大了');
+			            }
+			        }, 2000);
+			    });
+			    return p;            
+			}
+			
+			const clock = setInterval(function(){
+				// getNumber()
+				// .then(
+				//     function(data){
+				//         console.log('resolved');
+				//         console.log(data);
+				//     }, 
+				//     function(reason, data){
+				//         console.log('rejected');
+				//         console.log(reason);
+				//     }
+				// );
+				// 以下写法与上面写法功能一致,但是catch写法可以让then中出现报错时直接走catch避免程序阻塞
+				getNumber()
+				.then(function(data){
+					console.log('resolved');
+					console.log(data);
+				})
+				.catch(function(reason){
+					console.log('rejected');
+					console.log(reason);
+				});
+				
+			},2000);
+			
+			setTimeout(function(){
+				clearInterval(clock);
+			},20000)
+			
+			/**
+			 * all的用法：异步函数最后一个执行完
+			 *
+			 */
+			Promise
+			.all([runAsync1(), runAsync2(), runAsync3()]) //all可以让三个异步函数并行执行，并且只有等所有函数执行完成才会回调；最后原则，一定要最后一个执行完才会回调
+			.then(function(results){
+			    console.log(results);
+				});
+			/**
+			 * race用法异步函数第一个执行完及进入回调，类似于赛马
+			 */
+			Promise
+			.race([runAsync1(), runAsync2(), runAsync3()])
+			.then(function(results){
+			    console.log(results);
+			});
+			
+			
+			// document.getElementById('send').addEventListener('click',function(){
+			// 	console.log(document.getElementById('textbox').value)
+			// 	var backdata=document.getElementById('editbox').innerHTML;
+			// 	// var textdata=document.getElementById('textbox').value;
+			// 	console.log(backdata);
+			// 	document.getElementById('appendbox').innerHTML=backdata;
+			// 	// document.getElementById('tappendbox').innerHTML=textdata;
+			// }) 
+			
+		})()
+		</script>
+	</body>
+</html>

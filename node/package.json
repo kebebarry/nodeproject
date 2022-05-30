@@ -4,9 +4,13 @@
   "description": "�ӿ�׼����װһ�����������������Ҿ��Ѿ�׼���������ļ�\r 1����������npm install ˫��install.bat����װ�ӿ���������",
   "main": "adduser.js",
   "dependencies": {
+    "axios": "^0.27.2",
     "body-parser": "^1.18.2",
+    "cors": "^2.8.5",
     "express": "^4.16.2",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.3.0",
+    "mongodb": "^4.5.0",
     "multer": "^1.3.0",
     "mysql": "^2.15.0"
   },

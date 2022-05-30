@@ -1,0 +1,26 @@
+
+/**
+ * daik
+ */
+.loginbox{
+	width: calc(100% - 40px);
+	margin: 10px 20px;
+}
+.infobox{
+	width: 100%;
+	margin: 10px 0;
+	line-height: 44px;
+}
+.infobox input{
+	width: calc(100% - 22px);
+	padding: 5px 10px;
+	line-height: 34px;
+}
+.sendbox{
+	width: 100%;
+	line-height: 44px;
+	background-color: blue;
+	color: #fff;
+	font-size: 18px;
+	text-align: center;
+}

@@ -1,0 +1,66 @@
+<!-- /**
+ * 箭头函数用法
+ */ -->
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		
+	</head>
+
+	<body>
+		
+		<script type="text/javascript">
+			//标准写法
+			var fun1=function(){
+				
+			}
+			//无参数写法，无参数的情况不可以省略括号
+			var fun2=()=>{
+				
+			}
+			//单参数写法，单个参数情况可以省略括号
+			var fun3= a=>{
+				
+			}
+			//多参数写法，多参数必须要有括号
+			var fun4=(a,b)=>{
+				
+			}
+			//可变参数写法
+			var fun5=(a,b,...args)=>{
+				
+			}
+			
+			
+			//当函数中只有return的时候可以省略写法,
+			//原始写法
+			function hello(){
+				return 'hello';
+			}
+			//箭头函数写法
+			var hello=()=>return 'hello';
+			
+			//当函数中有多的情况下不可以省略写法
+			//原始写法
+			function hello(a){
+				a=a+'world';
+				return a;
+			}
+			//箭头函数写法
+			var hello=a=>{
+				a=a+'world';
+				return a;
+			};
+			//只有一行表达式的时候可以这么缩写
+			var hello=a=>a+'world';
+			
+			//如果返回的是对象的时候必须要有()
+			x=>({key:x})
+		</script>
+	</body>
+
+</html>
